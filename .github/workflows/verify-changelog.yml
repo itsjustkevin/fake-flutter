@@ -19,6 +19,6 @@ jobs:
       - name: Get stable branch name
         id: get-branch-name
         run: | 
-          STABLE_BRANCH=$(curl -s https://raw.githubusercontent.com/itsjustkevin/fake-flutter/main/bin/internal/release-candidate-branch.version)
+          STABLE_BRANCH=$(curl -s https://raw.githubusercontent.com/itsjustkevin/fake-flutter/flutter-2.22-candidate.0/bin/internal/release-candidate-branch.version)
           echo "STABLE_BRANCH=$STABLE_BRANCH" >> $GITHUB_ENV
           echo "stable branch name: $STABLE_BRANCH"
