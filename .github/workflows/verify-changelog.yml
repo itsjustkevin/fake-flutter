@@ -1,1 +1,24 @@
+name: Changelog Check
+run-name: Check for CHANGELOG updates in cherry-picks
 
+on:
+  workflow_dispatch
+  # pull_request:
+  #   types: [opened, synchronized, reopened]
+  #   branches-ignore: [master]
+
+jobs:
+  check-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get stable branch name
+        id: get-branch-name
+        run: | 
+          STABLE_BRANCH=$(curl -s https://raw.githubusercontent.com/flutter/flutter/main/bin/internal/release-candidate-branch.version)
+          echo "STABLE_BRANCH=$STABLE_BRANCH" >> $GITHUB_ENV
+          echo "stable branch name: $STABLE_BRANCH"
