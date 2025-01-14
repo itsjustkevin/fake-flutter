@@ -2,17 +2,17 @@ name: Changelog Check
 run-name: Check for CHANGELOG updates in cherry-picks
 
 on:
-  workflow_dispatch
-  # pull_request:
-  #   types: [opened, synchronized, reopened]
-  #   branches-ignore: [master]
+  # workflow_dispatch
+  pull_request:
+    types: [opened, synchronized, reopened]
+    branches-ignore: [master]
 
 jobs:
   check-changelog:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3 # need to update to a specific hash
         with:
           fetch-depth: 0
 
@@ -22,3 +22,24 @@ jobs:
           STABLE_BRANCH=$(curl -s https://raw.githubusercontent.com/itsjustkevin/fake-flutter/flutter-2.22-candidate.0/bin/internal/release-candidate-branch.version)
           echo "STABLE_BRANCH=$STABLE_BRANCH" >> $GITHUB_ENV
           echo "stable branch name: $STABLE_BRANCH"
+
+      - name: Check if PR targets the stable branch
+        run: |
+          if [[ "${{ github.head_ref }}" == "$STABLE_BRANCH" ]]; then
+            echo "Pull request targets the stable branch ($STABLE_BRANCH). Proceeding with changelog check."
+          else
+            echo "Pull request does not target the stable branch ($STABLE_BRANCH). Skipping changelog check."
+            exit 0  # Exit successfully to skip the rest of the workflow
+          fi
+
+      - name: Check for CHANGELOG.md changes in PR
+        id: changelog-changes
+        uses: tj-actions/changed-files@v45 # need to update to a specific hash
+        with:
+          files: CHANGELOG.md
+
+      - name: Fail if CHANGELOG.md is not changed
+        if: steps.changelog-changes.outputs.any_changed = 'false'
+        run: gh pr comment "This is a cherry-pick to the stable release branch, it requires an update to CHANGELOG.md to pass. Please refer to xxx for details on well formed CHANGELOG.md messages."
+
+      
