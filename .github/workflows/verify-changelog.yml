@@ -4,7 +4,6 @@ run-name: Check for CHANGELOG updates in cherry-picks
 on:
   # workflow_dispatch
   pull_request:
-    types: [opened, synchronized, reopened]
 
 jobs:
   check-changelog:
