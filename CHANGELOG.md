@@ -24,6 +24,7 @@ docs/releases/Hotfix-Documentation-Best-Practices.md
 
 INTERNAL NOTE
 -->
+## Flutter 3.28 Changes
 
 ## Flutter 3.27 Changes
 
