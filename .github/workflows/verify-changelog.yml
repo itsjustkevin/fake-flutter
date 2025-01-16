@@ -37,5 +37,5 @@ jobs:
           files: CHANGELOG.md
 
       - name: Fail if CHANGELOG.md is not changed
-        if: steps.changelog-changes.outputs.any_changed = 'false'
+        if: steps.changelog-changes.outputs.any_changed == 'false'
         run: gh pr comment "This is a cherry-pick to the stable release branch, it requires an update to CHANGELOG.md to pass. Please refer to xxx for details on well formed CHANGELOG.md messages."
